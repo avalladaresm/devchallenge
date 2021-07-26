@@ -27,6 +27,7 @@ const EmployeesTable = () => {
   const [_searchedEmployees, _setSearchedEmployees] = useState<Employee[] | null>(null);
   const [_isLoading, _setIsLoading] = useState(false);
   const [_oldestAge, _setOldestAge] = useState<number>();
+  const [_highestSalary, _setHighestSalary] = useState<number>();
 
   useEffect(() => {
     let mounted = true;
@@ -49,6 +50,7 @@ const EmployeesTable = () => {
   useEffect(() => {
     if (_employees.length > 0) {
       _setOldestAge(getMaxValue(_employees, "employee_age")?.employee_age ?? 100);
+      _setHighestSalary(getMaxValue(_employees, "employee_salary")?.employee_salary ?? 100);
     }
   }, [_employees]);
 
@@ -64,6 +66,13 @@ const EmployeesTable = () => {
   const onAgeRangeChange = (range: [number, number]) => {
     const filteredEmployees = _employees.filter(
       (employee) => employee.employee_age > range[0] && employee.employee_age < range[1]
+    );
+    _setSearchedEmployees(filteredEmployees);
+  };
+
+  const onSalaryRangeChange = (range: [number, number]) => {
+    const filteredEmployees = _employees.filter(
+      (employee) => employee.employee_salary > range[0] && employee.employee_salary < range[1]
     );
     _setSearchedEmployees(filteredEmployees);
   };
@@ -100,9 +109,21 @@ const EmployeesTable = () => {
       <Spin spinning={_isLoading}>
         {_oldestAge && (
           <Slider
-            range={{ draggableTrack: true }}
+            range
+            max={_oldestAge}
             defaultValue={[0, _oldestAge]}
             onChange={onAgeRangeChange}
+            tooltipVisible
+          />
+        )}
+      </Spin>
+      <Spin spinning={_isLoading}>
+        {_highestSalary && (
+          <Slider
+            range
+            max={_highestSalary}
+            defaultValue={[0, _highestSalary]}
+            onChange={onSalaryRangeChange}
             tooltipVisible
           />
         )}
