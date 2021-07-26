@@ -2,7 +2,7 @@ import { Input, message, Slider, Spin, Table } from "antd";
 import { ColumnsType } from "antd/lib/table";
 import { useEffect, useState } from "react";
 import { FetchEmployees } from "../services";
-import { getMaxValue } from "../utils";
+import { formatCurrency, getMaxValue } from "../utils";
 
 const { Search } = Input;
 
@@ -93,6 +93,7 @@ const EmployeesTable = () => {
       title: "Salary",
       dataIndex: "employee_salary",
       key: "employee_salary",
+      render: (text: number) => <span>{formatCurrency(text)}</span>,
       responsive: ["sm"]
     },
     {
@@ -125,6 +126,7 @@ const EmployeesTable = () => {
             defaultValue={[0, _highestSalary]}
             onChange={onSalaryRangeChange}
             tooltipVisible
+            tipFormatter={(value) => formatCurrency(value)}
           />
         )}
       </Spin>
