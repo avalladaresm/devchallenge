@@ -1,8 +1,9 @@
-import { Button, Input, message, Space, Table } from "antd";
+import { Input, message, Slider, Spin, Table } from "antd";
 import { ColumnsType } from "antd/lib/table";
 import { useEffect, useState } from "react";
 import { FetchEmployees } from "../services";
-import { SearchOutlined } from "@ant-design/icons";
+import { getMaxValue } from "../utils";
+
 const { Search } = Input;
 
 interface Employee {
@@ -25,6 +26,7 @@ const EmployeesTable = () => {
   const [_employees, _setEmployees] = useState<Employee[]>([]);
   const [_searchedEmployees, _setSearchedEmployees] = useState<Employee[] | null>(null);
   const [_isLoading, _setIsLoading] = useState(false);
+  const [_oldestAge, _setOldestAge] = useState<number>();
 
   useEffect(() => {
     let mounted = true;
@@ -44,6 +46,12 @@ const EmployeesTable = () => {
     })();
   }, []);
 
+  useEffect(() => {
+    if (_employees.length > 0) {
+      _setOldestAge(getMaxValue(_employees, "employee_age")?.employee_age ?? 100);
+    }
+  }, [_employees]);
+
   const onSearch = (searchedEmployeeName: string) => {
     const filteredEmployees = _employees.filter((employee) =>
       employee.employee_name.toString().toLowerCase().includes(searchedEmployeeName.toLowerCase())
@@ -51,6 +59,13 @@ const EmployeesTable = () => {
     searchedEmployeeName.length > 0
       ? _setSearchedEmployees(filteredEmployees)
       : _setSearchedEmployees(null);
+  };
+
+  const onAgeRangeChange = (range: [number, number]) => {
+    const filteredEmployees = _employees.filter(
+      (employee) => employee.employee_age > range[0] && employee.employee_age < range[1]
+    );
+    _setSearchedEmployees(filteredEmployees);
   };
 
   const columns: ColumnsType<Employee> = [
@@ -82,6 +97,16 @@ const EmployeesTable = () => {
   return (
     <div>
       <Search placeholder="input search text" onSearch={onSearch} enterButton />
+      <Spin spinning={_isLoading}>
+        {_oldestAge && (
+          <Slider
+            range={{ draggableTrack: true }}
+            defaultValue={[0, _oldestAge]}
+            onChange={onAgeRangeChange}
+            tooltipVisible
+          />
+        )}
+      </Spin>
       <Table
         rowKey="id"
         columns={columns}
