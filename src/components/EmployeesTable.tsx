@@ -1,4 +1,4 @@
-import { Input, message, Slider, Spin, Table } from "antd";
+import { Button, Input, message, Slider, Spin, Table } from "antd";
 import { ColumnsType } from "antd/lib/table";
 import { useEffect, useState } from "react";
 import { FetchEmployees } from "../services";
@@ -30,6 +30,7 @@ const EmployeesTable = () => {
   const [_highestSalary, _setHighestSalary] = useState<number>();
   const [_currentAgeRange, _setCurrentAgeRange] = useState<[number, number]>();
   const [_currentSalaryRange, _setCurrentSalaryRange] = useState<[number, number]>();
+  const [_searchText, _setSearchText] = useState("");
 
   useEffect(() => {
     let mounted = true;
@@ -60,29 +61,34 @@ const EmployeesTable = () => {
     }
   }, [_employees]);
 
-  const onSearch = (searchedEmployeeName: string) => {
-    const filteredEmployees = _employees.filter((employee) =>
-      employee.employee_name.toString().toLowerCase().includes(searchedEmployeeName.toLowerCase())
-    );
-    searchedEmployeeName.length > 0
-      ? _setSearchedEmployees(filteredEmployees)
-      : _setSearchedEmployees(null);
-  };
+  useEffect(() => {
+    const temp = [..._employees];
+    const result = temp
+      .filter((employee) =>
+        employee.employee_name.toString().toLowerCase().includes(_searchText.toLowerCase())
+      )
+      .filter(
+        (employee) =>
+          employee.employee_age > (_currentAgeRange ? _currentAgeRange[0] : 0) &&
+          employee.employee_age < (_currentAgeRange ? _currentAgeRange[1] : 100)
+      )
+      .filter(
+        (employee) =>
+          employee.employee_salary > (_currentSalaryRange ? _currentSalaryRange[0] : 0) &&
+          employee.employee_salary < (_currentSalaryRange ? _currentSalaryRange[1] : 100)
+      );
+    _setSearchedEmployees(result);
+  }, [_searchText, _currentAgeRange, _currentSalaryRange]);
 
-  const onAgeRangeChange = (range: [number, number]) => {
-    const filteredEmployees = _employees.filter(
-      (employee) => employee.employee_age > range[0] && employee.employee_age < range[1]
-    );
-    _setSearchedEmployees(filteredEmployees);
-    _setCurrentAgeRange(range);
-  };
-
-  const onSalaryRangeChange = (range: [number, number]) => {
-    const filteredEmployees = _employees.filter(
-      (employee) => employee.employee_salary > range[0] && employee.employee_salary < range[1]
-    );
-    _setSearchedEmployees(filteredEmployees);
-    _setCurrentSalaryRange(range);
+  const resetFilters = () => {
+    _setSearchedEmployees(null);
+    _setSearchText("");
+    const oldestAge = getMaxValue(_employees, "employee_age")?.employee_age ?? 100;
+    const highestSalary = getMaxValue(_employees, "employee_salary")?.employee_salary ?? 100;
+    _setOldestAge(oldestAge);
+    _setHighestSalary(highestSalary);
+    _setCurrentAgeRange([0, oldestAge]);
+    _setCurrentSalaryRange([0, highestSalary]);
   };
 
   const columns: ColumnsType<Employee> = [
@@ -125,7 +131,18 @@ const EmployeesTable = () => {
           marginBottom: 20
         }}
       >
-        <legend style={{ textAlign: "left", fontWeight: 600 }}>Filters</legend>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "flex-start"
+          }}
+        >
+          <h2 style={{ textAlign: "left", fontWeight: 600, width: "auto" }}>Filters</h2>
+          <Button type="link" onClick={() => resetFilters()}>
+            Clear filters
+          </Button>
+        </div>
         <div
           style={{
             display: "flex",
@@ -143,7 +160,14 @@ const EmployeesTable = () => {
             }}
           >
             <h4 style={{ textAlign: "left" }}>Search employee by name</h4>
-            <Search placeholder="input search text" onSearch={onSearch} enterButton />
+            <Search
+              placeholder="input search text"
+              onSearch={(value) => _setSearchText(value)}
+              onChange={(event) => _setSearchText(event.target.value)}
+              value={_searchText}
+              enterButton
+              allowClear
+            />
           </div>
           <div
             style={{
@@ -160,7 +184,8 @@ const EmployeesTable = () => {
                     range
                     max={_oldestAge}
                     defaultValue={[0, _oldestAge]}
-                    onChange={onAgeRangeChange}
+                    onChange={(range) => _setCurrentAgeRange(range)}
+                    value={_currentAgeRange}
                   />
                   <h4 style={{ textAlign: "left" }}>
                     min: {_currentAgeRange && _currentAgeRange[0]}, max:{" "}
@@ -186,7 +211,8 @@ const EmployeesTable = () => {
                       range
                       max={_highestSalary}
                       defaultValue={[0, _highestSalary]}
-                      onChange={onSalaryRangeChange}
+                      onChange={(range) => _setCurrentSalaryRange(range)}
+                      value={_currentSalaryRange}
                       tipFormatter={(value) => formatCurrency(value)}
                     />
                   </div>
