@@ -44,7 +44,7 @@ const EmployeesTable = () => {
         _setEmployees(res?.data);
         success(res?.message);
       } catch (e) {
-        error(e.response.data?.message);
+        error(e.response.data?.message ?? "error");
       }
       mounted && _setIsLoading(false);
       return () => {
@@ -129,14 +129,6 @@ const EmployeesTable = () => {
       responsive: ["sm"]
     }
   ];
-
-  const handleOk = () => {
-    _setIsModalVisible(false);
-  };
-
-  const handleCancel = () => {
-    _setIsModalVisible(false);
-  };
 
   return (
     <div style={{ padding: 20, backgroundColor: "#F3F4F6", height: "100vh" }}>
@@ -252,11 +244,10 @@ const EmployeesTable = () => {
         dataSource={_searchedEmployees ?? _employees}
         loading={_isLoading}
       ></Table>
-      {_employeeDetails && (
+      {_employeeDetails && _isModalVisible && (
         <EmployeeDetails
           isModalVisible={_isModalVisible}
-          handleOk={handleOk}
-          handleCancel={handleCancel}
+          setIsModalVisible={_setIsModalVisible}
           employeeDetails={_employeeDetails}
         />
       )}
