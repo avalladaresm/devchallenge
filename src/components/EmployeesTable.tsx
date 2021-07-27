@@ -1,9 +1,10 @@
-import { Button, Input, message, Slider, Spin, Table } from "antd";
+import { Button, Input, Slider, Spin, Table } from "antd";
 import { ColumnsType } from "antd/lib/table";
 import { useEffect, useState } from "react";
 import { FetchEmployees } from "../services";
 import { formatCurrency, getMaxValue } from "../utils";
 import EmployeeDetails from "./EmployeeDetails";
+import { error, success } from "./Messages";
 
 const { Search } = Input;
 
@@ -14,14 +15,6 @@ interface Employee {
   employee_age: number;
   profile_image: string;
 }
-
-const success = (successMessage: string) => {
-  message.success(successMessage);
-};
-
-const error = (error: string) => {
-  message.error(error);
-};
 
 const EmployeesTable = () => {
   const [_employees, _setEmployees] = useState<Employee[]>([]);

@@ -1,15 +1,8 @@
-import { Button, Form, Image, Input, message, Modal, Spin } from "antd";
+import { Button, Form, Image, Input, Modal, Spin } from "antd";
 import { useEffect, useState } from "react";
 import { DeleteEmployee, FetchProfileImage, UpdateEmployee } from "../services";
 import { fallbackImage } from "../utils";
-
-const success = (successMessage: string) => {
-  message.success(successMessage);
-};
-
-const error = (error: string) => {
-  message.error(error);
-};
+import { error, success } from "./Messages";
 
 const EmployeeDetails = ({ isModalVisible, setIsModalVisible, employeeDetails }: any) => {
   const { id, employee_name, employee_age, employee_salary } = employeeDetails;
