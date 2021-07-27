@@ -3,6 +3,7 @@ import { ColumnsType } from "antd/lib/table";
 import { useEffect, useState } from "react";
 import { FetchEmployees } from "../services";
 import { formatCurrency, getMaxValue } from "../utils";
+import EmployeeDetails from "./EmployeeDetails";
 
 const { Search } = Input;
 
@@ -31,6 +32,8 @@ const EmployeesTable = () => {
   const [_currentAgeRange, _setCurrentAgeRange] = useState<[number, number]>();
   const [_currentSalaryRange, _setCurrentSalaryRange] = useState<[number, number]>();
   const [_searchText, _setSearchText] = useState("");
+  const [_isModalVisible, _setIsModalVisible] = useState(false);
+  const [_employeeDetails, _setEmployeeDetails] = useState<Employee>();
 
   useEffect(() => {
     let mounted = true;
@@ -78,7 +81,7 @@ const EmployeesTable = () => {
           employee.employee_salary < (_currentSalaryRange ? _currentSalaryRange[1] : 100)
       );
     _setSearchedEmployees(result);
-  }, [_searchText, _currentAgeRange, _currentSalaryRange]);
+  }, [_searchText, _currentAgeRange, _currentSalaryRange, _employees]);
 
   const resetFilters = () => {
     _setSearchedEmployees(null);
@@ -91,12 +94,21 @@ const EmployeesTable = () => {
     _setCurrentSalaryRange([0, highestSalary]);
   };
 
+  const viewEmployeeDetails = (record: Employee) => {
+    _setIsModalVisible(true);
+    _setEmployeeDetails(record);
+  };
+
   const columns: ColumnsType<Employee> = [
     {
       title: "Id",
       dataIndex: "id",
       key: "id",
-      render: (text: string) => <a>{text}</a>
+      render: (text: string, record: Employee) => (
+        <Button type="link" onClick={() => viewEmployeeDetails(record)}>
+          {text}
+        </Button>
+      )
     },
     {
       title: "Employee name",
@@ -117,6 +129,14 @@ const EmployeesTable = () => {
       responsive: ["sm"]
     }
   ];
+
+  const handleOk = () => {
+    _setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    _setIsModalVisible(false);
+  };
 
   return (
     <div style={{ padding: 20, backgroundColor: "#F3F4F6", height: "100vh" }}>
@@ -232,6 +252,14 @@ const EmployeesTable = () => {
         dataSource={_searchedEmployees ?? _employees}
         loading={_isLoading}
       ></Table>
+      {_employeeDetails && (
+        <EmployeeDetails
+          isModalVisible={_isModalVisible}
+          handleOk={handleOk}
+          handleCancel={handleCancel}
+          employeeDetails={_employeeDetails}
+        />
+      )}
     </div>
   );
 };
