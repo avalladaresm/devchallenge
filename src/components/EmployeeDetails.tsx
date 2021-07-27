@@ -28,7 +28,7 @@ const EmployeeDetails = ({ isModalVisible, setIsModalVisible, employeeDetails }:
         const res = await FetchProfileImage(employee_name);
         _setProfileImage(res);
       } catch (e) {
-        error(e.response.data?.message ?? "error");
+        error(e.response?.data?.message ?? "Error fetching image");
       }
       mounted && _setIsImageFetching(false);
       return () => {
@@ -55,7 +55,7 @@ const EmployeeDetails = ({ isModalVisible, setIsModalVisible, employeeDetails }:
       success(result?.message);
       setIsModalVisible(false);
     } catch (e) {
-      error(e.response.data?.message);
+      error(e.response?.data?.message ?? "Error updating employee");
     } finally {
       _setIsUpdating(false);
     }
@@ -68,7 +68,7 @@ const EmployeeDetails = ({ isModalVisible, setIsModalVisible, employeeDetails }:
       success(result?.message);
       setIsModalVisible(false);
     } catch (e) {
-      error(e.response.data?.message);
+      error(e.response?.data?.message ?? "Error deleting employee");
     } finally {
       _setIsDeleting(false);
     }

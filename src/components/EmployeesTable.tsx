@@ -44,7 +44,7 @@ const EmployeesTable = () => {
         _setEmployees(res?.data);
         success(res?.message);
       } catch (e) {
-        error(e.response.data?.message ?? "error");
+        error(e.response?.data?.message ?? "Error fetching employees");
       }
       mounted && _setIsLoading(false);
       return () => {
