@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getBase64FromBlob } from "../utils";
 
 export const FetchEmployees = async () => {
   try {
@@ -26,6 +27,18 @@ export const DeleteEmployee = async (employeeId: number) => {
       `https://dummy.restapiexample.com/api/v1/delete/${employeeId}`
     );
     return deleteResult?.data;
+  } catch (e) {
+    throw e;
+  }
+};
+
+export const FetchProfileImage = async (employeeName: string) => {
+  try {
+    const profileImage = await axios.get(`https://robohash.org/${employeeName}`, {
+      responseType: "blob"
+    });
+    const imgBase64 = await getBase64FromBlob(profileImage?.data);
+    return imgBase64;
   } catch (e) {
     throw e;
   }

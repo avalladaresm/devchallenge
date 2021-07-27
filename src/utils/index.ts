@@ -14,3 +14,13 @@ export const formatCurrency = (value: number | undefined) => {
     currencyDisplay: "symbol"
   });
 };
+
+export const getBase64FromBlob = (blob: any) => {
+  return new Promise((resolve) => {
+    var reader = new FileReader();
+    reader.readAsDataURL(blob);
+    reader.onloadend = function () {
+      resolve(reader.result);
+    };
+  });
+};
