@@ -1,6 +1,7 @@
 import { Button, Form, Image, Input, Modal, Spin } from "antd";
 import { useEffect, useState } from "react";
 import { DeleteEmployee, FetchProfileImage, UpdateEmployee } from "../services";
+import { Employee } from "../types";
 import { fallbackImage } from "../utils";
 import { error, success } from "./Messages";
 
@@ -41,10 +42,10 @@ const EmployeeDetails = ({ isModalVisible, setIsModalVisible, employeeDetails }:
     }
   };
 
-  const handleUpdateEmployee = async () => {
+  const handleUpdateEmployee = async (data: Employee) => {
     try {
       _setIsUpdating(true);
-      const result = await UpdateEmployee(id);
+      const result = await UpdateEmployee(id, data);
       success(result?.message);
       setIsModalVisible(false);
     } catch (e) {
@@ -100,7 +101,7 @@ const EmployeeDetails = ({ isModalVisible, setIsModalVisible, employeeDetails }:
             form
               .validateFields()
               .then((values) => {
-                handleUpdateEmployee();
+                handleUpdateEmployee(values);
               })
               .catch((info) => {
                 error(info);
@@ -128,7 +129,7 @@ const EmployeeDetails = ({ isModalVisible, setIsModalVisible, employeeDetails }:
         <Form.Item label="Name" name="employee_name">
           <Input disabled={_isUpdating} />
         </Form.Item>
-        <Form.Item label="Salary" name="employee_salary">
+        <Form.Item label="Salary ($)" name="employee_salary">
           <Input disabled={_isUpdating} />
         </Form.Item>
         <Form.Item label="Age" name="employee_age" valuePropName="value">

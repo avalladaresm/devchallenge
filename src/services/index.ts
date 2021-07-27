@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Employee } from "../types";
 import { getBase64FromBlob } from "../utils";
 
 export const FetchEmployees = async () => {
@@ -10,10 +11,11 @@ export const FetchEmployees = async () => {
   }
 };
 
-export const UpdateEmployee = async (employeeId: number) => {
+export const UpdateEmployee = async (employeeId: number, data: Employee) => {
   try {
     const updateResult = await axios.put(
-      `https://dummy.restapiexample.com/api/v1/update/${employeeId}`
+      `https://dummy.restapiexample.com/api/v1/update/${employeeId}`,
+      JSON.stringify(data)
     );
     return updateResult?.data;
   } catch (e) {

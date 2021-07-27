@@ -2,19 +2,12 @@ import { Button, Input, Slider, Spin, Table } from "antd";
 import { ColumnsType } from "antd/lib/table";
 import { useEffect, useState } from "react";
 import { FetchEmployees } from "../services";
+import { Employee } from "../types";
 import { formatCurrency, getMaxValue } from "../utils";
 import EmployeeDetails from "./EmployeeDetails";
 import { error, success } from "./Messages";
 
 const { Search } = Input;
-
-interface Employee {
-  id: number;
-  employee_name: string;
-  employee_salary: number;
-  employee_age: number;
-  profile_image: string;
-}
 
 const EmployeesTable = () => {
   const [_employees, _setEmployees] = useState<Employee[]>([]);
@@ -195,6 +188,7 @@ const EmployeesTable = () => {
           </div>
         </div>
       </div>
+
       <Table
         rowKey="id"
         columns={columns}
