@@ -1,4 +1,4 @@
-import { Button, Input, Slider, Spin, Table } from "antd";
+import { Button, Empty, Input, Slider, Spin, Table } from "antd";
 import { ColumnsType } from "antd/lib/table";
 import { useEffect, useState } from "react";
 import { FetchEmployees } from "../services";
@@ -127,21 +127,28 @@ const EmployeesTable = () => {
           }}
         >
           <h2 style={{ textAlign: "left", fontWeight: 600, width: "auto" }}>Filters</h2>
-          <Button type="link" onClick={() => resetFilters()}>
+          <Button type="link" disabled={_employees.length === 0} onClick={() => resetFilters()}>
             Clear filters
           </Button>
         </div>
+        {_employees.length === 0 && !_isLoading && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}
         <div className="filterInputs">
           <div className="singleFilterInput">
-            <h4 style={{ textAlign: "left" }}>Search employee by name</h4>
-            <Search
-              placeholder="input search text"
-              onSearch={(value) => _setSearchText(value)}
-              onChange={(event) => _setSearchText(event.target.value)}
-              value={_searchText}
-              enterButton
-              allowClear
-            />
+            <Spin spinning={_isLoading}>
+              {_oldestAge && (
+                <div>
+                  <h4 style={{ textAlign: "left" }}>Search employee by name</h4>
+                  <Search
+                    placeholder="input search text"
+                    onSearch={(value) => _setSearchText(value)}
+                    onChange={(event) => _setSearchText(event.target.value)}
+                    value={_searchText}
+                    enterButton
+                    allowClear
+                  />
+                </div>
+              )}
+            </Spin>
           </div>
           <div className="singleFilterInput">
             <Spin spinning={_isLoading}>
