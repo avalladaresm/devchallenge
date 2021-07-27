@@ -132,17 +132,7 @@ const EmployeesTable = () => {
 
   return (
     <div style={{ padding: 20, backgroundColor: "#F3F4F6", height: "100vh" }}>
-      <div
-        style={{
-          padding: 10,
-          backgroundColor: "#D1D5DB",
-          borderWidth: 3,
-          borderColor: "#6B7280",
-          borderStyle: "solid",
-          borderRadius: 10,
-          marginBottom: 20
-        }}
-      >
+      <div className={"filtersSection"}>
         <div
           style={{
             display: "flex",
@@ -155,22 +145,8 @@ const EmployeesTable = () => {
             Clear filters
           </Button>
         </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-evenly",
-            width: "100%",
-            marginBottom: 20
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              width: "30%"
-            }}
-          >
+        <div className="filterInputs">
+          <div className="singleFilterInput">
             <h4 style={{ textAlign: "left" }}>Search employee by name</h4>
             <Search
               placeholder="input search text"
@@ -181,13 +157,7 @@ const EmployeesTable = () => {
               allowClear
             />
           </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              width: "30%"
-            }}
-          >
+          <div className="singleFilterInput">
             <Spin spinning={_isLoading}>
               {_oldestAge && (
                 <div>
@@ -207,13 +177,7 @@ const EmployeesTable = () => {
               )}
             </Spin>
           </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              width: "30%"
-            }}
-          >
+          <div className="singleFilterInput">
             <Spin spinning={_isLoading}>
               {_highestSalary && (
                 <div>
