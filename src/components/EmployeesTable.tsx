@@ -1,4 +1,4 @@
-import { Button, Empty, Input, Slider, Spin, Table } from "antd";
+import { Button, Empty, Input, PageHeader, Slider, Spin, Table } from "antd";
 import { ColumnsType } from "antd/lib/table";
 import { useEffect, useState } from "react";
 import { FetchEmployees } from "../services";
@@ -118,6 +118,7 @@ const EmployeesTable = () => {
 
   return (
     <div style={{ padding: 20, backgroundColor: "#F3F4F6", height: "100vh" }}>
+      <PageHeader title="Employees" subTitle="List of employees" />
       <div className={"filtersSection"}>
         <div
           style={{
