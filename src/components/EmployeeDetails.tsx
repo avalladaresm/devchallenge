@@ -130,10 +130,10 @@ const EmployeeDetails = ({ isModalVisible, setIsModalVisible, employeeDetails }:
           <Input disabled={_isUpdating} />
         </Form.Item>
         <Form.Item label="Salary ($)" name="employee_salary">
-          <Input disabled={_isUpdating} />
+          <Input disabled={_isUpdating} type="number" />
         </Form.Item>
         <Form.Item label="Age" name="employee_age" valuePropName="value">
-          <Input disabled={_isUpdating} />
+          <Input disabled={_isUpdating} type="number" />
         </Form.Item>
         <Form.Item label="Profile image" name="profile_image">
           <div style={{ display: "flex", alignItems: "center" }}>
